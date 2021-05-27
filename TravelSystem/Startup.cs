@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TravelSystem.DataAccessLayer.Controller;
 using TravelSystem.DataAccessLayer.Database;
 using TravelSystem.DataAccessLayer.Models;
 
@@ -37,7 +38,10 @@ namespace TravelSystem
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<AppDBContext>();
-            services.AddControllersWithViews();
+            services.AddScoped<IDataControl, DataControl>();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            ); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

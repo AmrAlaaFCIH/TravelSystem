@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using TravelSystem.DataAccessLayer.Models;
 
 namespace TravelSystem.DataAccessLayer.Controller
 {
-    public class DataControl 
+    public class DataControl : IDataControl
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
@@ -23,11 +24,22 @@ namespace TravelSystem.DataAccessLayer.Controller
             this.context = context;
         }
 
+
+        public List<ApplicationUser> GetAllUsers()
+        {
+            return context.Users.Include(e => e.Posted)
+                .Include(e=>e.LikedPosts)
+                .Include(e=>e.DislikedPosts)
+                .Where(e => e.UserName != "Admin").ToList();
+        }
+        
+
         public async Task<List<ApplicationUser>> GetAllTravelers()
         {
             var users = await userManager.GetUsersInRoleAsync("Traveler");
             return users.ToList();
         }
+
 
         public async Task<List<ApplicationUser>> GetAllAgencies()
         {

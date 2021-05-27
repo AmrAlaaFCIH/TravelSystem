@@ -20,7 +20,7 @@ namespace TravelSystem.DataAccessLayer.Models
         public string PostData { get; set; }
         [Required][MaxLength(200)]
         public string Destination { get; set; }
-        [Required][MaxLength(600)]
+        [MaxLength(600)]
         public string PhotoPath { get; set; }
         public int Likes { get; set; }
         public int DisLikes { get; set; }

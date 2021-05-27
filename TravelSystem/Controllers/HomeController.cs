@@ -5,22 +5,26 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using TravelSystem.DataAccessLayer.Controller;
+using TravelSystem.DataAccessLayer.Models;
 
 namespace TravelSystem.Controllers
 {
     [Route("")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
+        private readonly IDataControl data;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,IDataControl data)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.data = data;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return Json(data.GetAllUsers());
         }
 
     }
