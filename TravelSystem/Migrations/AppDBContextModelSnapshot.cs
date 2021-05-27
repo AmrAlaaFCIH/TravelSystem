@@ -228,6 +228,51 @@ namespace TravelSystem.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.DislikedPostTable", b =>
+                {
+                    b.Property<Guid>("postID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("userID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("postID", "userID");
+
+                    b.HasIndex("userID");
+
+                    b.ToTable("dislikedPosts");
+                });
+
+            modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.LikedPostTable", b =>
+                {
+                    b.Property<Guid>("postID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("userID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("postID", "userID");
+
+                    b.HasIndex("userID");
+
+                    b.ToTable("LikedPosts");
+                });
+
+            modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.SavedPostTable", b =>
+                {
+                    b.Property<Guid>("postID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("userID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("postID", "userID");
+
+                    b.HasIndex("userID");
+
+                    b.ToTable("SavedPosts");
+                });
+
             modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.TripPost", b =>
                 {
                     b.Property<Guid>("Id")
@@ -262,12 +307,6 @@ namespace TravelSystem.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("DislikedPostID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LikedPostID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Likes")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -280,13 +319,10 @@ namespace TravelSystem.Migrations
                         .HasMaxLength(600)
                         .HasColumnType("nvarchar(600)");
 
-                    b.Property<string>("PostData")
+                    b.Property<string>("PostDate")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SavedPostID")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -295,13 +331,7 @@ namespace TravelSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DislikedPostID");
-
-                    b.HasIndex("LikedPostID");
-
                     b.HasIndex("OwnerID");
-
-                    b.HasIndex("SavedPostID");
 
                     b.ToTable("TripPosts");
                 });
@@ -357,35 +387,71 @@ namespace TravelSystem.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.DislikedPostTable", b =>
+                {
+                    b.HasOne("TravelSystem.DataAccessLayer.Models.TripPost", "post")
+                        .WithMany("Dislikedby")
+                        .HasForeignKey("postID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelSystem.DataAccessLayer.Models.ApplicationUser", "user")
+                        .WithMany("DislikedPosts")
+                        .HasForeignKey("userID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("post");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.LikedPostTable", b =>
+                {
+                    b.HasOne("TravelSystem.DataAccessLayer.Models.TripPost", "post")
+                        .WithMany("Likedby")
+                        .HasForeignKey("postID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelSystem.DataAccessLayer.Models.ApplicationUser", "user")
+                        .WithMany("LikedPosts")
+                        .HasForeignKey("userID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("post");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.SavedPostTable", b =>
+                {
+                    b.HasOne("TravelSystem.DataAccessLayer.Models.TripPost", "post")
+                        .WithMany("Savedby")
+                        .HasForeignKey("postID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelSystem.DataAccessLayer.Models.ApplicationUser", "user")
+                        .WithMany("SavedPosts")
+                        .HasForeignKey("userID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("post");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.TripPost", b =>
                 {
-                    b.HasOne("TravelSystem.DataAccessLayer.Models.ApplicationUser", "DislikedPost")
-                        .WithMany("DislikedPosts")
-                        .HasForeignKey("DislikedPostID")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.HasOne("TravelSystem.DataAccessLayer.Models.ApplicationUser", "LikedPost")
-                        .WithMany("LikedPosts")
-                        .HasForeignKey("LikedPostID")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
                     b.HasOne("TravelSystem.DataAccessLayer.Models.ApplicationUser", "Owner")
                         .WithMany("Posted")
                         .HasForeignKey("OwnerID")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.HasOne("TravelSystem.DataAccessLayer.Models.ApplicationUser", "SavedPost")
-                        .WithMany("SavedPosts")
-                        .HasForeignKey("SavedPostID")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.Navigation("DislikedPost");
-
-                    b.Navigation("LikedPost");
-
                     b.Navigation("Owner");
-
-                    b.Navigation("SavedPost");
                 });
 
             modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.ApplicationUser", b =>
@@ -397,6 +463,15 @@ namespace TravelSystem.Migrations
                     b.Navigation("Posted");
 
                     b.Navigation("SavedPosts");
+                });
+
+            modelBuilder.Entity("TravelSystem.DataAccessLayer.Models.TripPost", b =>
+                {
+                    b.Navigation("Dislikedby");
+
+                    b.Navigation("Likedby");
+
+                    b.Navigation("Savedby");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TravelSystem.Migrations
 {
-    public partial class finishing : Migration
+    public partial class fullDataBase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -164,35 +164,93 @@ namespace TravelSystem.Migrations
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PostData = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PostDate = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Destination = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    PhotoPath = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
+                    PhotoPath = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true),
                     Likes = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     DisLikes = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Accepted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    LikedPostID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DislikedPostID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    SavedPostID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    OwnerID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TripPosts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TripPosts_AspNetUsers_DislikedPostID",
-                        column: x => x.DislikedPostID,
+                        name: "FK_TripPosts_AspNetUsers_OwnerID",
+                        column: x => x.OwnerID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "dislikedPosts",
+                columns: table => new
+                {
+                    userID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    postID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_dislikedPosts", x => new { x.postID, x.userID });
+                    table.ForeignKey(
+                        name: "FK_dislikedPosts_AspNetUsers_userID",
+                        column: x => x.userID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TripPosts_AspNetUsers_LikedPostID",
-                        column: x => x.LikedPostID,
+                        name: "FK_dislikedPosts_TripPosts_postID",
+                        column: x => x.postID,
+                        principalTable: "TripPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LikedPosts",
+                columns: table => new
+                {
+                    userID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    postID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LikedPosts", x => new { x.postID, x.userID });
+                    table.ForeignKey(
+                        name: "FK_LikedPosts_AspNetUsers_userID",
+                        column: x => x.userID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TripPosts_AspNetUsers_SavedPostID",
-                        column: x => x.SavedPostID,
+                        name: "FK_LikedPosts_TripPosts_postID",
+                        column: x => x.postID,
+                        principalTable: "TripPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SavedPosts",
+                columns: table => new
+                {
+                    userID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    postID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SavedPosts", x => new { x.postID, x.userID });
+                    table.ForeignKey(
+                        name: "FK_SavedPosts_AspNetUsers_userID",
+                        column: x => x.userID,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SavedPosts_TripPosts_postID",
+                        column: x => x.postID,
+                        principalTable: "TripPosts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -237,19 +295,24 @@ namespace TravelSystem.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripPosts_DislikedPostID",
-                table: "TripPosts",
-                column: "DislikedPostID");
+                name: "IX_dislikedPosts_userID",
+                table: "dislikedPosts",
+                column: "userID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripPosts_LikedPostID",
-                table: "TripPosts",
-                column: "LikedPostID");
+                name: "IX_LikedPosts_userID",
+                table: "LikedPosts",
+                column: "userID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripPosts_SavedPostID",
+                name: "IX_SavedPosts_userID",
+                table: "SavedPosts",
+                column: "userID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripPosts_OwnerID",
                 table: "TripPosts",
-                column: "SavedPostID");
+                column: "OwnerID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -270,10 +333,19 @@ namespace TravelSystem.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "TripPosts");
+                name: "dislikedPosts");
+
+            migrationBuilder.DropTable(
+                name: "LikedPosts");
+
+            migrationBuilder.DropTable(
+                name: "SavedPosts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "TripPosts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

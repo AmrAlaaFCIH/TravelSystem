@@ -16,8 +16,8 @@ namespace TravelSystem.DataAccessLayer.Models
         public string PhotoPath { get; set; }
 
         public List<TripPost> Posted { get; set; } = new();
-        public List<TripPost> LikedPosts { get; set; } = new();
-        public List<TripPost> DislikedPosts { get; set; } = new();
-        public List<TripPost> SavedPosts { get; set; } = new();
+        public List<LikedPostTable> LikedPosts { get; set; } = new();
+        public List<DislikedPostTable> DislikedPosts { get; set; } = new();
+        public List<SavedPostTable> SavedPosts { get; set; } = new();
     }
 }

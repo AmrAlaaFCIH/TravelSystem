@@ -24,7 +24,7 @@ namespace TravelSystem.Controllers
 
         public IActionResult Index()
         {
-            return Json(data.GetAllUsers());
+            return Json(data.GetAllUsers()[0]);
         }
 
     }

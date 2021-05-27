@@ -17,7 +17,7 @@ namespace TravelSystem.DataAccessLayer.Models
         [Required][MaxLength(100)]
         public string Date { get; set; }
         [Required][MaxLength(100)]
-        public string PostData { get; set; }
+        public string PostDate { get; set; }
         [Required][MaxLength(200)]
         public string Destination { get; set; }
         [MaxLength(600)]
@@ -26,14 +26,11 @@ namespace TravelSystem.DataAccessLayer.Models
         public int DisLikes { get; set; }
         public bool Accepted { get; set; }
 
-        public string LikedPostID { get; set; }
-        public ApplicationUser LikedPost { get; set; }
+        public List<LikedPostTable> Likedby { get; set; }
 
-        public string DislikedPostID { get; set; }
-        public ApplicationUser DislikedPost { get; set; }
+        public List<DislikedPostTable> Dislikedby { get; set; }
 
-        public string SavedPostID { get; set; }
-        public ApplicationUser SavedPost { get; set; }
+        public List<SavedPostTable> Savedby { get; set; }
 
         public string OwnerID { get; set; }
         public ApplicationUser Owner { get; set; }

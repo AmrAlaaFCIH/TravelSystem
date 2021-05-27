@@ -25,5 +25,7 @@ namespace TravelSystem.DataAccessLayer.Controller
 
         public Task AddTrip(string userID, TripPost post);
 
+       public Task LikeTripPost(string userID, Guid postID);
+
     }
 }

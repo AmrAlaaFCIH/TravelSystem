@@ -27,24 +27,53 @@ namespace TravelSystem.DataAccessLayer.Controller
 
         public List<ApplicationUser> GetAllUsers()
         {
-            return context.Users.Include(e => e.Posted)
+            return context.Users
+                .Include(e => e.Posted)
                 .Include(e=>e.LikedPosts)
+                .ThenInclude(e=>e.post)
                 .Include(e=>e.DislikedPosts)
-                .Where(e => e.UserName != "Admin").ToList();
+                .ThenInclude(e=>e.post)
+                .Include(e=>e.SavedPosts)
+                .ThenInclude(e=>e.post)
+                .Where(e => e.UserName != "Admin")
+                .ToList();
         }
         
 
         public async Task<List<ApplicationUser>> GetAllTravelers()
         {
-            var users = await userManager.GetUsersInRoleAsync("Traveler");
-            return users.ToList();
+            var TravelersWithAllInfo = new List<ApplicationUser>();
+            var Travelers = await userManager.GetUsersInRoleAsync("Traveler");
+            foreach(var traveler in Travelers)
+            {
+                TravelersWithAllInfo.AddRange(
+                    context.Users
+                    .Include(e => e.LikedPosts)
+                    .ThenInclude(e => e.post)
+                    .Include(e => e.DislikedPosts)
+                    .ThenInclude(e => e.post)
+                    .Include(e => e.SavedPosts)
+                    .ThenInclude(e => e.post)
+                    .Where(e => e.Id == traveler.Id)
+                   );
+            }
+            return TravelersWithAllInfo;
         }
 
 
         public async Task<List<ApplicationUser>> GetAllAgencies()
         {
-            var users = await userManager.GetUsersInRoleAsync("Agency");
-            return users.ToList();
+            var AgenciesWithAllInfo = new List<ApplicationUser>();
+            var Agencies = await userManager.GetUsersInRoleAsync("Agency");
+            foreach(var Agency in Agencies)
+            {
+                AgenciesWithAllInfo.AddRange(
+                    context.Users
+                    .Include(e => e.Posted)
+                    .Where(e => e.Id == Agency.Id)
+                   );
+            }
+            return AgenciesWithAllInfo;
         }
 
         public async Task<IdentityResult> CreateTraveler(ApplicationUser user,string password)
@@ -79,6 +108,7 @@ namespace TravelSystem.DataAccessLayer.Controller
 
         public void DeleteTrip(Guid Id)
         {
+
             context.TripPosts.Remove(context.TripPosts.FirstOrDefault(e=>e.Id==Id));
             context.SaveChanges();
         }
@@ -87,6 +117,25 @@ namespace TravelSystem.DataAccessLayer.Controller
         {
             var FoundUser = await userManager.FindByIdAsync(userID);
             FoundUser.Posted.Add(post);
+            await userManager.UpdateAsync(FoundUser);
+        }
+
+        public async Task LikeTripPost(string userID,Guid postID)
+        {
+            var FoundUser = await userManager.FindByIdAsync(userID);
+            var Post = context.TripPosts.FirstOrDefault(e => e.Id == postID);
+            if (Post != null)
+            {
+                await context.LikedPosts.AddAsync(new LikedPostTable()
+                {
+                    user = FoundUser,
+                    post = Post
+                });
+            }
+            Post.Likes += 1;
+            var updatedPost = context.TripPosts.Attach(Post);
+            updatedPost.State = EntityState.Modified;
+            context.SaveChanges();
             await userManager.UpdateAsync(FoundUser);
         }
        
