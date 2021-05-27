@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TravelSystem.Migrations
 {
-    public partial class AddIdentityFramework : Migration
+    public partial class finishing : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -169,28 +169,29 @@ namespace TravelSystem.Migrations
                     PhotoPath = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
                     Likes = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     DisLikes = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ApplicationUserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ApplicationUserId2 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Accepted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    LikedPostID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DislikedPostID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SavedPostID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TripPosts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TripPosts_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_TripPosts_AspNetUsers_DislikedPostID",
+                        column: x => x.DislikedPostID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TripPosts_AspNetUsers_ApplicationUserId1",
-                        column: x => x.ApplicationUserId1,
+                        name: "FK_TripPosts_AspNetUsers_LikedPostID",
+                        column: x => x.LikedPostID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TripPosts_AspNetUsers_ApplicationUserId2",
-                        column: x => x.ApplicationUserId2,
+                        name: "FK_TripPosts_AspNetUsers_SavedPostID",
+                        column: x => x.SavedPostID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -236,19 +237,19 @@ namespace TravelSystem.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripPosts_ApplicationUserId",
+                name: "IX_TripPosts_DislikedPostID",
                 table: "TripPosts",
-                column: "ApplicationUserId");
+                column: "DislikedPostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripPosts_ApplicationUserId1",
+                name: "IX_TripPosts_LikedPostID",
                 table: "TripPosts",
-                column: "ApplicationUserId1");
+                column: "LikedPostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripPosts_ApplicationUserId2",
+                name: "IX_TripPosts_SavedPostID",
                 table: "TripPosts",
-                column: "ApplicationUserId2");
+                column: "SavedPostID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

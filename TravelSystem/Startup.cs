@@ -59,14 +59,14 @@ namespace TravelSystem
 
             app.UseAuthorization();
 
+
+            //for first time use
             CreateRoles(serviceProvider).Wait();
             CreateAdmin(serviceProvider).Wait();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
             
         }

@@ -14,6 +14,8 @@ namespace TravelSystem.DataAccessLayer.Models
         [Required][MaxLength(30)]
         public string LastName { get; set; }
         public string PhotoPath { get; set; }
+
+        public List<TripPost> Posted { get; set; } = new();
         public List<TripPost> LikedPosts { get; set; } = new();
         public List<TripPost> DislikedPosts { get; set; } = new();
         public List<TripPost> SavedPosts { get; set; } = new();
