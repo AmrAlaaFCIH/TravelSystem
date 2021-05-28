@@ -55,7 +55,7 @@ namespace TravelSystem
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseStaticFiles();
+           
 
             app.UseRouting();
 
@@ -63,6 +63,7 @@ namespace TravelSystem
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
 
             //for first time use
             CreateRoles(serviceProvider).Wait();
