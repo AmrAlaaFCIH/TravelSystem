@@ -23,6 +23,12 @@
                 <p style="font-weight: 600;">Account</p>
             </a>
         </li>
+        <li>
+            <a asp-controller="Admin" asp-action="Users">
+                <i class="nc-icon nc-user-run"></i>
+                <p style="font-weight: 600;">Users</p>
+            </a>
+        </li>
     </ul>
 }
 
@@ -65,7 +71,7 @@
     <div class="col-md-8">
         <div class="card card-user">
             <div class="card-header">
-                <h5 class="card-title" style="font-weight: 600; color: #ef8157; ">Edit Profile</h5>
+                <h5 class="card-title">Edit Profile</h5>
             </div>
             <div class="card-body">
                 <form enctype="multipart/form-data" asp-controller="Admin" asp-action="UpdateAccount" method="post">

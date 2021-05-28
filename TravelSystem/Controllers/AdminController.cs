@@ -124,6 +124,12 @@ namespace TravelSystem.Controllers
             await userManager.UpdateAsync(user);
             return RedirectToAction("Account");
         }
+
+        [Route("Users")]
+        public IActionResult Users()
+        {
+            return View();
+        }
         
     }
 }
