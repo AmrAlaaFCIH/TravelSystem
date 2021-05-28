@@ -12,70 +12,14 @@ namespace TravelSystem.DataAccessLayer.Controller
     public class DataControl : IDataControl
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly AppDBContext context;
 
-        public DataControl(UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager,SignInManager<ApplicationUser> signInManager,AppDBContext context)
+        public DataControl(UserManager<ApplicationUser> userManager,AppDBContext context)
         {
             this.userManager = userManager;
-            this.roleManager = roleManager;
-            this.signInManager = signInManager;
             this.context = context;
         }
-
-
-        public List<ApplicationUser> GetAllUsers()
-        {
-            return context.Users
-                .Include(e => e.Posted)
-                .Include(e=>e.LikedPosts)
-                .ThenInclude(e=>e.post)
-                .Include(e=>e.DislikedPosts)
-                .ThenInclude(e=>e.post)
-                .Include(e=>e.SavedPosts)
-                .ThenInclude(e=>e.post)
-                .Where(e => e.UserName != "Admin")
-                .ToList();
-        }
         
-
-        public async Task<List<ApplicationUser>> GetAllTravelers()
-        {
-            var TravelersWithAllInfo = new List<ApplicationUser>();
-            var Travelers = await userManager.GetUsersInRoleAsync("Traveler");
-            foreach(var traveler in Travelers)
-            {
-                TravelersWithAllInfo.AddRange(
-                    context.Users
-                    .Include(e => e.LikedPosts)
-                    .ThenInclude(e => e.post)
-                    .Include(e => e.DislikedPosts)
-                    .ThenInclude(e => e.post)
-                    .Include(e => e.SavedPosts)
-                    .ThenInclude(e => e.post)
-                    .Where(e => e.Id == traveler.Id)
-                   );
-            }
-            return TravelersWithAllInfo;
-        }
-
-
-        public async Task<List<ApplicationUser>> GetAllAgencies()
-        {
-            var AgenciesWithAllInfo = new List<ApplicationUser>();
-            var Agencies = await userManager.GetUsersInRoleAsync("Agency");
-            foreach(var Agency in Agencies)
-            {
-                AgenciesWithAllInfo.AddRange(
-                    context.Users
-                    .Include(e => e.Posted)
-                    .Where(e => e.Id == Agency.Id)
-                   );
-            }
-            return AgenciesWithAllInfo;
-        }
-
         public async Task<IdentityResult> CreateTraveler(ApplicationUser user,string password)
         {
             var result = await userManager.CreateAsync(user,password);
@@ -94,6 +38,8 @@ namespace TravelSystem.DataAccessLayer.Controller
             }
             return result;
         }
+
+
 
         public async Task<IdentityResult> DeleteUser(ApplicationUser user)
         {

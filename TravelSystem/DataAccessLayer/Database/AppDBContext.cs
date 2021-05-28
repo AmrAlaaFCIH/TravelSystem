@@ -79,6 +79,7 @@ namespace TravelSystem.DataAccessLayer.Database
                 .WithOne(trip => trip.Owner)
                 .HasForeignKey(trip => trip.OwnerID)
                 .OnDelete(DeleteBehavior.ClientCascade);
+
         }
     }
 }
