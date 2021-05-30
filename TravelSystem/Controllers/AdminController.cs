@@ -158,6 +158,12 @@ namespace TravelSystem.Controllers
             }
             return RedirectToAction("Users");
         }
+
+        [Route("Posts")]
+        public IActionResult Posts()
+        {
+            return View();
+        }
         
     }
 }
