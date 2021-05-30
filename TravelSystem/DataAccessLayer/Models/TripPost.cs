@@ -22,8 +22,7 @@ namespace TravelSystem.DataAccessLayer.Models
         public string Destination { get; set; }
         [MaxLength(600)]
         public string PhotoPath { get; set; }
-        public int Likes { get; set; }
-        public int DisLikes { get; set; }
+
         public bool Accepted { get; set; }
 
         public List<LikedPostTable> Likedby { get; set; }

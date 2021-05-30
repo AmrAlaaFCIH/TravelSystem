@@ -24,8 +24,6 @@ namespace TravelSystem.DataAccessLayer.Database
             base.OnModelCreating(builder);
             builder.Entity<TripPost>(trip =>
             {
-                trip.Property(p => p.Likes).HasDefaultValue(0);
-                trip.Property(p => p.DisLikes).HasDefaultValue(0);
                 trip.Property(p => p.Accepted).HasDefaultValue(false);
             });
 
@@ -36,13 +34,13 @@ namespace TravelSystem.DataAccessLayer.Database
                 .HasOne(e => e.user)
                 .WithMany(e => e.LikedPosts)
                 .HasForeignKey(e => e.userID)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<LikedPostTable>()
                 .HasOne(e => e.post)
                 .WithMany(e => e.Likedby)
                 .HasForeignKey(e => e.postID)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<DislikedPostTable>().
                 HasKey(e => new { e.postID, e.userID });
@@ -51,13 +49,13 @@ namespace TravelSystem.DataAccessLayer.Database
                 .HasOne(e => e.user)
                 .WithMany(e => e.DislikedPosts)
                 .HasForeignKey(e => e.userID)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<DislikedPostTable>()
                 .HasOne(e => e.post)
                 .WithMany(e => e.Dislikedby)
                 .HasForeignKey(e => e.postID)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<SavedPostTable>().
                 HasKey(e => new { e.postID, e.userID });
@@ -66,13 +64,13 @@ namespace TravelSystem.DataAccessLayer.Database
                 .HasOne(e => e.user)
                 .WithMany(e => e.SavedPosts)
                 .HasForeignKey(e => e.userID)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<SavedPostTable>()
                 .HasOne(e => e.post)
                 .WithMany(e => e.Savedby)
                 .HasForeignKey(e => e.postID)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             builder.Entity<ApplicationUser>().HasMany(user => user.Posted)

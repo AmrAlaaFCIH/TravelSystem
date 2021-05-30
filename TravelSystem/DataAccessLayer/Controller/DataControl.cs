@@ -45,7 +45,8 @@ namespace TravelSystem.DataAccessLayer.Controller
         {
             if (user.Posted != null || user.Posted.Count != 0)
             {
-                context.TripPosts.RemoveRange(user.Posted);
+                var posts=context.TripPosts.Where(e => e.OwnerID == user.Id);
+                context.TripPosts.RemoveRange(posts);
                 context.SaveChanges();
             }           
             var result = await userManager.DeleteAsync(user);
@@ -78,13 +79,19 @@ namespace TravelSystem.DataAccessLayer.Controller
                     post = Post
                 });
             }
-            Post.Likes += 1;
-            var updatedPost = context.TripPosts.Attach(Post);
-            updatedPost.State = EntityState.Modified;
             context.SaveChanges();
             await userManager.UpdateAsync(FoundUser);
         }
        
+        public int GetPostLikes(Guid PostID)
+        {
+            return context.LikedPosts.Where(e => e.postID == PostID).Count();
+        }
+
+        public int GetPostDisLikes(Guid PostID)
+        {
+            return context.dislikedPosts.Where(e => e.postID == PostID).Count();
+        }
 
 
     }

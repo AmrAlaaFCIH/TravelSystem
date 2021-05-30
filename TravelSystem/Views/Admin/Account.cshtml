@@ -4,9 +4,18 @@
 }
 @model AdminAccountViewModel
 
-@section scripts
+@section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        bsCustomFileInput.init()
+
+        var btn = document.getElementById('btnResetForm')
+        var form = document.querySelector('form')
+        btn.addEventListener('click', function () {
+            form.reset()
+        });
+    </script>
 }
 
 @section Choosen {

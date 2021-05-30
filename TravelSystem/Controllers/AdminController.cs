@@ -138,9 +138,25 @@ namespace TravelSystem.Controllers
         }
 
         [Route("Users")]
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
-            return View();
+            AdminUsersViewModel model = new()
+            {
+                Users = (List<ApplicationUser>)await userManager.GetUsersInRoleAsync("Traveler"),
+                Agencies = (List<ApplicationUser>)await userManager.GetUsersInRoleAsync("Agency")
+            };
+            return View(model);
+        }
+
+        [Route("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(string UserID)
+        {
+            var user =await userManager.FindByIdAsync(UserID);
+            if (user != null)
+            {
+                await dataControl.DeleteUser(user);
+            }
+            return RedirectToAction("Users");
         }
         
     }
