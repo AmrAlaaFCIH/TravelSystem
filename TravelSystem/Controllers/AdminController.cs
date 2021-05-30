@@ -86,10 +86,17 @@ namespace TravelSystem.Controllers
             return RedirectToAction("Account");
         }
 
-        private static void UpdateValues(AdminAccountViewModel admin, ApplicationUser adminInDB, string PhotoPath)
+        private void UpdateValues(AdminAccountViewModel admin, ApplicationUser adminInDB, string PhotoPath)
         {
             adminInDB.PhoneNumber = admin.PhoneNumber;
-            adminInDB.PhotoPath = PhotoPath == null ? adminInDB.PhotoPath : PhotoPath;
+            if (PhotoPath != null)
+            {
+                if (adminInDB.PhotoPath != null)
+                {
+                    DeleteUserImage(adminInDB);
+                }
+                adminInDB.PhotoPath = PhotoPath;
+            }
             adminInDB.FirstName = admin.FirstName;
             adminInDB.LastName = admin.LastName;
         }
@@ -118,11 +125,16 @@ namespace TravelSystem.Controllers
             {
                 return RedirectToAction("Account");
             }
-            FileInfo Photo = new(Path.Combine(env.WebRootPath, "Images", "Avatars", user.PhotoPath));
-            Photo.Delete();
+            DeleteUserImage(user);
             user.PhotoPath = null;
             await userManager.UpdateAsync(user);
             return RedirectToAction("Account");
+        }
+
+        private void DeleteUserImage(ApplicationUser user)
+        {
+            FileInfo Photo = new(Path.Combine(env.WebRootPath, "Images", "Avatars", user.PhotoPath));
+            Photo.Delete();
         }
 
         [Route("Users")]
