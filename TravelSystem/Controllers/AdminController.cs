@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -162,7 +163,12 @@ namespace TravelSystem.Controllers
         [Route("Posts")]
         public IActionResult Posts()
         {
-            return View();
+            var Posts=appDBContext.TripPosts
+                .Include(e => e.Owner)
+                .Include(e=>e.Likedby)
+                .Include(e=>e.Dislikedby)
+                .ToList();
+            return View(Posts);
         }
         
     }

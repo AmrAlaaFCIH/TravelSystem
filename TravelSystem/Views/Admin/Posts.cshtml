@@ -2,7 +2,7 @@
     ViewData["Title"] = "Posts";
     Layout = "_AdminLayout";
 }
-
+@model List<TripPost>
 @section Choosen {
     <ul class="nav">
         <li>
@@ -31,3 +31,41 @@
         </li>
     </ul>
 }
+
+
+<div class="row">
+    @foreach (var post in Model)
+    {
+        <div class="col-lg-4 col-md-6">
+            <div class="card">
+                @if (post.PhotoPath == null)
+                {
+                    <img class="card-img-top" src="~/Images/default-cover.jpg" style="height:70px;" alt="Card image cap">
+                }
+                else
+                {
+                    <img class="card-img-top" src="~/Images/Posts/@post.PhotoPath" style="height:70px;" alt="Card image cap">
+                }
+            <div class="card-body">
+                <h4 class="card-title">@post.Title</h4>
+                <p class="card-text">@post.Details</p>
+                <p class="card-text"><span style="font-weight: 600; color: #ef8157;">Destination: </span>@post.Destination</p>
+                <p class="card-text"><span style="font-weight: 600; color: #ef8157;">TravelDate: </span>@post.Date</p>
+                <p class="card-text"><span style="font-weight: 600; color: #ef8157;">PostDate: </span>@post.PostDate</p>
+                <p class="card-text"><span style="font-weight: 600; color: #ef8157;">Likes: </span>@post.Likedby.Count()</p>
+                <p class="card-text"><span style="font-weight: 600; color: #ef8157;">Dislikes: </span>@post.Dislikedby.Count()</p>
+                <div class="card-footer">
+                    <hr>
+                    <div class="button-container">
+                        <div class="row">
+                            <div class="update ml-auto mr-auto">
+                                <a href="#" class="btn btn-danger btn-round">Delete ProfilePic</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    }
+</div>
