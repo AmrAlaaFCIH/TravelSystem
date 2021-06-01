@@ -170,11 +170,6 @@ namespace TravelSystem.Controllers
         [Route("Posts"),HttpPost]
         public IActionResult Posts(TripPost post)
         {
-            if (!ModelState.IsValid)
-            {
-                List<TripPost> Posts = GetAllPosts();
-                return View("Posts", Posts);
-            }
             var postInDB = appDBContext.TripPosts.FirstOrDefault(p => p.Id == post.Id);
             UpdatePost(post, postInDB);
             var UpdatedPost = appDBContext.TripPosts.Attach(postInDB);

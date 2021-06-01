@@ -109,57 +109,57 @@
                                     <a asp-controller="Admin" asp-action="ApprovePost" asp-route-PostID=@post.Id class="btn btn-info btn-link btn-icon btn-sm like"><i class="fa fa-thumbs-up"></i></a>
                                 }
                                 <button type="button" class="btn btn-warning btn-link btn-icon btn-sm edit" data-toggle="modal" data-target="#All-@i"><i class="fa fa-edit"></i></button>
+                                <div class="modal fade text-left" id="All-@i" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Edit Post</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form asp-controller="Admin" asp-action="Posts" method="post">
+                                                <div class="modal-body">
+                                                    <div class="container-fluid">
+                                                        @if (post.PhotoPath == null)
+                                                        {
+                                                            <img data-src="holder.js/100px250/" style="height:250px;width:100%;" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Images/Avatars/@post.PhotoPath" style="height:250px;width:100%;" />
+                                                        }
+                                                        <hr />
+                                                        <input type="hidden" asp-for="@post.Id" />
+                                                        <div class="form-group">
+                                                            <label asp-for="@post.Title"></label>
+                                                            <input asp-for="@post.Title" class="form-control" required />
+                                                            <span asp-validation-for="@post.Title" class="field-validation-error"></span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label asp-for="@post.Destination"></label>
+                                                            <input asp-for="@post.Destination" class="form-control" required/>
+                                                            <span asp-validation-for="@post.Destination" class="field-validation-error"></span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label asp-for="@post.Details"></label>
+                                                            <input asp-for="@post.Details" class="form-control" required/>
+                                                            <span asp-validation-for="@post.Details" class="field-validation-error"></span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                                 <a asp-controller="Admin" asp-action="DeletePost" asp-route-PostID=@post.Id class="btn btn-danger btn-link btn-icon btn-sm remove"><i class="fa fa-times"></i></a>
                             </td>
                             </tr>
-                            <div class="modal fade" id="All-@i" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Edit Post</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form asp-controller="Admin" asp-action="Posts" method="post">
-                                            <div class="modal-body">
-                                                <div class="container-fluid">
-                                                    @if (post.PhotoPath == null)
-                                                    {
-                                                        <img data-src="holder.js/100px250/" style="height:250px;width:100%;" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="~/Images/Avatars/@post.PhotoPath" style="height:250px;width:100%;" />
-                                                    }
-                                                    <hr />
-                                                    <input type="hidden" asp-for="@post.Id" />
-                                                    <div class="form-group">
-                                                        <label asp-for="@post.Title"></label>
-                                                        <input asp-for="@post.Title" class="form-control"/>
-                                                        <span asp-validation-for="@post.Title" class="field-validation-error"></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label asp-for="@post.Destination"></label>
-                                                        <input asp-for="@post.Destination" class="form-control"/>
-                                                        <span asp-validation-for="@post.Destination" class="field-validation-error"></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label asp-for="@post.Details"></label>
-                                                        <input asp-for="@post.Details" class="form-control"/>
-                                                        <span asp-validation-for="@post.Details" class="field-validation-error"></span>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         }
                     </tbody>
                 </table>
