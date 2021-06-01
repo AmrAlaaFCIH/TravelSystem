@@ -163,13 +163,66 @@ namespace TravelSystem.Controllers
         [Route("Posts")]
         public IActionResult Posts()
         {
-            var Posts=appDBContext.TripPosts
-                .Include(e => e.Owner)
-                .Include(e=>e.Likedby)
-                .Include(e=>e.Dislikedby)
-                .ToList();
+            var Posts= GetAllPosts();
             return View(Posts);
         }
-        
+
+        [Route("Posts"),HttpPost]
+        public IActionResult Posts(TripPost post)
+        {
+            if (!ModelState.IsValid)
+            {
+                List<TripPost> Posts = GetAllPosts();
+                return View("Posts", Posts);
+            }
+            var postInDB = appDBContext.TripPosts.FirstOrDefault(p => p.Id == post.Id);
+            UpdatePost(post, postInDB);
+            var UpdatedPost = appDBContext.TripPosts.Attach(postInDB);
+            UpdatedPost.State = EntityState.Modified;
+            appDBContext.SaveChanges();
+            return RedirectToAction("Posts");
+        }
+
+        [Route("DeletePost")]
+        public IActionResult DeletePost(Guid PostID)
+        {
+            var post = appDBContext.TripPosts.FirstOrDefault(p => p.Id == PostID);
+            if (post != null)
+            {
+                appDBContext.TripPosts.Remove(post);
+                appDBContext.SaveChanges();
+            }
+            return RedirectToAction("Posts");
+        }
+
+        [Route("ApprovePost")]
+        public IActionResult ApprovePost(Guid PostID)
+        {
+            var post = appDBContext.TripPosts.FirstOrDefault(p => p.Id == PostID);
+            if (post != null)
+            {
+                post.Accepted = true;
+                var UpdatedPost = appDBContext.TripPosts.Attach(post);
+                UpdatedPost.State = EntityState.Modified;
+                appDBContext.SaveChanges();
+            }
+            return RedirectToAction("Posts");
+        }
+
+        private List<TripPost> GetAllPosts()
+        {
+            return appDBContext.TripPosts
+                            .Include(e => e.Owner)
+                            .Include(e => e.Likedby)
+                            .Include(e => e.Dislikedby)
+                            .ToList();
+        }
+
+        private static void UpdatePost(TripPost post, TripPost postInDB)
+        {
+            postInDB.Title = post.Title;
+            postInDB.Destination = post.Destination;
+            postInDB.Details = post.Details;
+        }
     }
 }
