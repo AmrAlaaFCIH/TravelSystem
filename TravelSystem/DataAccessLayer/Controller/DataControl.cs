@@ -67,12 +67,17 @@ namespace TravelSystem.DataAccessLayer.Controller
             await userManager.UpdateAsync(FoundUser);
         }
 
-        public async Task LikeTripPost(string userID,Guid postID)
+        public async Task LikeTripPost(string userName,Guid postID)
         {
-            var FoundUser = await userManager.FindByIdAsync(userID);
+            var FoundUser = await userManager.FindByNameAsync(userName);
             var Post = context.TripPosts.FirstOrDefault(e => e.Id == postID);
             if (Post != null)
             {
+                var CheckifDisliked = context.dislikedPosts.FirstOrDefault(e => e.postID == postID && e.userID == FoundUser.Id);
+                if (CheckifDisliked != null)
+                {
+                    context.dislikedPosts.Remove(CheckifDisliked);
+                }
                 await context.LikedPosts.AddAsync(new LikedPostTable()
                 {
                     user = FoundUser,
@@ -82,7 +87,47 @@ namespace TravelSystem.DataAccessLayer.Controller
             context.SaveChanges();
             await userManager.UpdateAsync(FoundUser);
         }
-       
+
+
+
+        public async Task DisLikeTripPost(string userName, Guid postID)
+        {
+            var FoundUser = await userManager.FindByNameAsync(userName);
+            var Post = context.TripPosts.FirstOrDefault(e => e.Id == postID);
+            if (Post != null)
+            {
+                var Checkifliked = context.LikedPosts.FirstOrDefault(e => e.postID == postID && e.userID == FoundUser.Id);
+                if (Checkifliked != null)
+                {
+                    context.LikedPosts.Remove(Checkifliked);
+                }
+                await context.dislikedPosts.AddAsync(new DislikedPostTable()
+                {
+                    user = FoundUser,
+                    post = Post
+                });
+            }
+            context.SaveChanges();
+            await userManager.UpdateAsync(FoundUser);
+        }
+
+
+        public async Task SaveTripPost(string userName, Guid postID)
+        {
+            var FoundUser = await userManager.FindByNameAsync(userName);
+            var Post = context.TripPosts.FirstOrDefault(e => e.Id == postID);
+            if (Post != null)
+            {
+                await context.SavedPosts.AddAsync(new SavedPostTable()
+                {
+                    user = FoundUser,
+                    post = Post
+                });
+            }
+            context.SaveChanges();
+            await userManager.UpdateAsync(FoundUser);
+        }
+
         public int GetPostLikes(Guid PostID)
         {
             return context.LikedPosts.Where(e => e.postID == PostID).Count();

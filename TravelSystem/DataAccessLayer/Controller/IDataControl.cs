@@ -19,7 +19,11 @@ namespace TravelSystem.DataAccessLayer.Controller
 
         public Task AddTrip(string userID, TripPost post);
 
-       public Task LikeTripPost(string userID, Guid postID);
+        public Task DisLikeTripPost(string userName, Guid postID);
+
+       public Task LikeTripPost(string userName, Guid postID);
+
+        public Task SaveTripPost(string userName, Guid postID);
 
     }
 }

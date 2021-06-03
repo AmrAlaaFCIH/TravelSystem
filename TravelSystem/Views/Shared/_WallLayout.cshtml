@@ -19,10 +19,10 @@
 
 <body class="index-page">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top navbar-transparent" color-on-scroll="500">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-@ViewBag.Nav" color-on-scroll="500">
         <div class="container">
             <div class="navbar-translate">
-                <a class="navbar-brand" href="#" rel="tooltip" title="Travel System" data-placement="bottom" target="_blank">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index" rel="tooltip" title="Travel System" data-placement="bottom">
                     Travel System
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,26 +34,18 @@
             <div class="collapse navbar-collapse" data-color="orange">
                 <ul class="navbar-nav ml-auto">
                     <li class="dropdown nav-item">
-                        <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                        <span style="cursor:pointer;" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
                             Account
-                        </a>
+                        </span>
                         @RenderSection("DropDown",required:true)
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" id="navbarDropdownMenuLink1" data-toggle="dropdown">
-                            Link 2
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-round btn-danger" href="#" target="_blank">
-                            <i class="nc-icon nc-cart-simple"></i> Link 3
-                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
      @RenderBody()
+    @if (ViewBag.footer)
+    {
     <footer class="footer footer-black">
         <div class="container-fluid">
             <div class="row">
@@ -73,6 +65,7 @@
             </div>
         </div>
     </footer>
+    }
     <!--   Core JS Files   -->
 
     <script src="~/js/jquery.min.js"></script>

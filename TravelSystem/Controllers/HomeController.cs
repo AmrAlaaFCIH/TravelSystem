@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -26,7 +27,6 @@ namespace TravelSystem.Controllers
             this.context = context;
         }
 
-        [Route("")]
         public IActionResult Index(string SignUpError,string LoginError, string Agency, string Destination, string Date)
         {
             ViewBag.Posts = GetAllApprovedPosts(Agency, Destination, Date);
@@ -51,12 +51,31 @@ namespace TravelSystem.Controllers
                 .ToList();
         }
 
-       
-        public async Task<IActionResult> likePost(string userId, Guid postId)
+        [Route("LikePost")]
+        public async Task<IActionResult> likePost(string UserName, Guid postId)
         {
-           await data.LikeTripPost(userId, postId);
-
+            await data.LikeTripPost(UserName, postId);
             return RedirectToAction("Index");
+        }
+
+        [Route("DislikePost")]
+        public async Task<IActionResult> DislikePost(string UserName, Guid postId)
+        {
+            await data.DisLikeTripPost(UserName, postId);
+            return RedirectToAction("Index");
+        }
+
+        [Route("SavePost")]
+        public async Task<IActionResult> SavePost(string UserName, Guid postId)
+        {
+            await data.SaveTripPost(UserName, postId);
+            return RedirectToAction("Index");
+        }
+
+        [Route("SavedPosts"),Authorize(Roles = "Traveler")]
+        public IActionResult SavedPosts()
+        {
+            return View();
         }
 
     }
