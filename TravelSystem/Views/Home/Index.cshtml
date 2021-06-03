@@ -4,14 +4,22 @@
     var Posts = ViewBag.Posts as List<TripPost>;
 }
 
+@inject SignInManager<ApplicationUser> signInManager 
+
 
 @section DropDown{
     <div class="dropdown-menu dropdown-menu-right dropdown-danger">
-        <partial name="_SignInForm" />
-        <partial name="_register" />
+        @if (!signInManager.IsSignedIn(User))
+        {
+            <partial name="_SignInForm" />
+            <partial name="_register" />
+        }
+        else
+        {
         <a href="javascript:;" class="dropdown-item">
             Edit
         </a>
+        }
     </div>
 }
 
@@ -65,21 +73,21 @@
                     <div class="col-md-10 ml-auto mr-auto">
                         <div class="card card-raised card-form-horizontal no-transition">
                             <div class="card-body">
-                                <form method="get">
+                                <form asp-controller="Home" asp-action="Index" method="get">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <input type="text" value="" placeholder="Destination" class="form-control">
+                                                <input type="text" value="@ViewBag.Destination" placeholder="Destination" name="Destination" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <input type="text" value="" placeholder="Agency Name" class="form-control">
+                                                <input type="text" value="@ViewBag.Agency" placeholder="Agency Name"  name="Agency" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="input-group date" id="datetimepicker">
-                                                <input type="text" class="form-control datetimepicker" placeholder="">
+                                                <input type="text" value="@ViewBag.Date" class="form-control datetimepicker" placeholder="" name="Date">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">
                                                         <span class="glyphicon glyphicon-calendar"><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -88,7 +96,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <button type="button" class="btn btn-danger btn-block"><i class="nc-icon nc-zoom-split"></i> &nbsp; Search</button>
+                                            <button type="submit" class="btn btn-danger btn-block"><i class="nc-icon nc-zoom-split"></i> &nbsp; Search</button>
                                         </div>
                                     </div>
                                 </form>
@@ -102,7 +110,8 @@
 </div>
 
 
-
+@if (Posts.Count != 0)
+{
 <div class="section">
     <div class="container">
         <div class="row">
@@ -138,14 +147,17 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fa fa-ellipsis-h"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
-                                            <a class="dropdown-item" href="#">Save</a>
+                                    @if (signInManager.IsSignedIn(User))
+                                    {
+                                        <div class="dropdown">
+                                            <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                                                <a class="dropdown-item" href="#">Save</a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -173,10 +185,13 @@
                                 <i class="fa fa-calendar" aria-hidden="true"></i><span style="font-weight:bold;">@post.Date </span>
                             </div>
                         </div>
+                        @if (signInManager.IsSignedIn(User))
+                        {
                         <div class="card-footer">
-                            <a href="#" class="card-link btn btn-info btn-link" style="color:black;"><i class="fa fa-thumbs-up"></i> Like</a>
-                            <a href="#" class="card-link btn btn-info btn-link btn-danger" style="color:black;"><i class="fa fa-thumbs-down"></i> Dislike</a>
+                            <a asp-controller="Home" asp-action="likePost" class="card-link btn btn-info btn-link" style="color:black;"><i class="fa fa-thumbs-up"></i> Like</a>
+                            <a class="card-link btn btn-info btn-link btn-danger" style="color:black;"><i class="fa fa-thumbs-down"></i> Dislike</a>
                         </div>
+                        }
                     </div>
                 </div>
 
@@ -184,5 +199,6 @@
         </div>
     </div>
 </div>
+}
 
 
