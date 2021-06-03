@@ -1,11 +1,22 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     Layout = "_WallLayout";
+    var Posts = ViewBag.Posts as List<TripPost>;
 }
 
-@model List<TripPost>
+
+@section DropDown{
+    <div class="dropdown-menu dropdown-menu-right dropdown-danger">
+        <partial name="_SignInForm" />
+        <partial name="_register" />
+        <a href="javascript:;" class="dropdown-item">
+            Edit
+        </a>
+    </div>
+}
 
 @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
     <script src="~/js/moment.min.js"></script>
     <script src="~/js/bootstrap-datetimepicker.js"></script>
     <script>
@@ -28,6 +39,13 @@
                 });
             }
         });
+        $(document).ready(function () {
+            var uri = window.location.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            }
+        });
     </script>
 }
 
@@ -47,7 +65,7 @@
                     <div class="col-md-10 ml-auto mr-auto">
                         <div class="card card-raised card-form-horizontal no-transition">
                             <div class="card-body">
-                                <form method="get" >
+                                <form method="get">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
@@ -94,12 +112,12 @@
         </div>
         <hr />
         <div class="row">
-            @foreach (var post in Model)
+            @foreach (var post in Posts)
             {
 
 
 
-<div class="col-lg-4 col-md-6 text-center">
+                <div class="col-lg-4 col-md-6 text-center">
                     <div class="card no-transition">
                         <div class="card-header bg-white">
                             <div class="d-flex justify-content-between align-items-center">
@@ -150,10 +168,10 @@
                                 @post.Details
                             </p>
                             <div class="stats">
-                                <i class="fa fa-thumbs-up" aria-hidden="true"></i><span style="font-weight:bold;">@post.Likedby.Count</span> 
+                                <i class="fa fa-thumbs-up" aria-hidden="true"></i><span style="font-weight:bold;">@post.Likedby.Count</span>
                                 <i class="fa fa-thumbs-down" aria-hidden="true"></i><span style="font-weight:bold;"> @post.Dislikedby.Count </span>
                                 <i class="fa fa-calendar" aria-hidden="true"></i><span style="font-weight:bold;">@post.Date </span>
-</div>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <a href="#" class="card-link btn btn-info btn-link" style="color:black;"><i class="fa fa-thumbs-up"></i> Like</a>

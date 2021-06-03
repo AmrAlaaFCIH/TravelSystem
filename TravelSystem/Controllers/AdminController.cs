@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,21 +15,24 @@ using TravelSystem.Models.ViewModels;
 
 namespace TravelSystem.Controllers
 {
-    [Route("Admin")]
+    [Route("Admin"),Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IDataControl dataControl;
         private readonly AppDBContext appDBContext;
         private readonly IWebHostEnvironment env;
+        private readonly SignInManager<ApplicationUser> signInManager;
 
-        public AdminController(UserManager<ApplicationUser> userManager,IDataControl dataControl,AppDBContext appDBContext,IWebHostEnvironment env)
+        public AdminController(UserManager<ApplicationUser> userManager,IDataControl dataControl,AppDBContext appDBContext,IWebHostEnvironment env,SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
             this.dataControl = dataControl;
             this.appDBContext = appDBContext;
             this.env = env;
+            this.signInManager = signInManager;
         }
+
 
         public async Task<IActionResult> Index()
         {
@@ -42,6 +46,14 @@ namespace TravelSystem.Controllers
                 AcceptedPostsNumber = appDBContext.TripPosts.Where(e=>e.Accepted==true).Count()
             };
             return View(model);
+        }
+
+
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         [Route("Account"),HttpGet]

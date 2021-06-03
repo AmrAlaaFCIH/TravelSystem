@@ -26,9 +26,13 @@ namespace TravelSystem.Controllers
             this.context = context;
         }
 
-        public IActionResult Index()
-        { 
-            return View(GetAllApprovedPosts());
+        [Route("")]
+        public IActionResult Index(string SignUpError,string LoginError)
+        {
+            ViewBag.Posts = GetAllApprovedPosts();
+            ViewBag.SignUpError = SignUpError;
+            ViewBag.LoginError = LoginError;
+            return View();
         }
 
         private List<TripPost> GetAllApprovedPosts()
@@ -40,7 +44,5 @@ namespace TravelSystem.Controllers
                 .Include(e => e.Dislikedby)
                 .ToList();
         }
-
-
     }
 }
