@@ -62,6 +62,13 @@
                     Saved
                 </a>
             }
+            if (await userManager.IsInRoleAsync(user, "Agency"))
+            {
+                <a asp-controller="Agent" asp-action="index" class="dropdown-item">
+                    Agency
+                </a>
+            }
+
             <a asp-controller="Account" asp-action="Logout" class="dropdown-item">
                 Logout
             </a>

@@ -26,4 +26,17 @@
     <Folder Include="wwwroot\Images\Posts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Views\Agent\Edit.cshtml" />
+    <None Include="Views\Agent\Index.cshtml" />
+    <None Include="Views\Agent\List.cshtml" />
+    <None Include="Views\Agent\Privacy.cshtml" />
+    <None Include="Views\Trip\Create.cshtml" />
+    <None Include="Views\Trip\Delete.cshtml" />
+    <None Include="Views\Trip\Edit.cshtml" />
+    <None Include="Views\Trip\Index.cshtml" />
+    <None Include="Views\Trip\List.cshtml" />
+    <None Include="Views\Trip\Privacy.cshtml" />
+  </ItemGroup>
+
 </Project>
